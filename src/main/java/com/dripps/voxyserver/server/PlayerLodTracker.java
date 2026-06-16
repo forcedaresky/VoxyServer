@@ -2,7 +2,7 @@ package com.dripps.voxyserver.server;
 
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import me.cortex.voxy.common.world.WorldEngine;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PlayerLodTracker {
@@ -12,7 +12,7 @@ public class PlayerLodTracker {
     private volatile boolean ready = false;
     private volatile boolean protocolOk = false;
 
-    private Identifier awaitingManifestDim;
+    private ResourceLocation awaitingManifestDim;
     private long manifestDeadlineTick;
     private int lastChunkX;
     private int lastChunkZ;
@@ -76,7 +76,7 @@ public class PlayerLodTracker {
         sentSectionHashes.remove(sectionKey);
     }
 
-    public synchronized void beginManifestWait(Identifier dimension, long deadlineTick) {
+    public synchronized void beginManifestWait(ResourceLocation dimension, long deadlineTick) {
         this.awaitingManifestDim = dimension;
         this.manifestDeadlineTick = deadlineTick;
     }
@@ -86,7 +86,7 @@ public class PlayerLodTracker {
     }
 
     // true if the scan should be gated waiting for this dims manifest. opens the gate once the deadline passes
-    public synchronized boolean isManifestGated(Identifier dimension, long currentTick) {
+    public synchronized boolean isManifestGated(ResourceLocation dimension, long currentTick) {
         if (awaitingManifestDim == null) return false;
         if (!awaitingManifestDim.equals(dimension)) return false;
         if (currentTick >= manifestDeadlineTick) {

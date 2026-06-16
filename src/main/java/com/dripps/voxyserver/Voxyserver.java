@@ -11,13 +11,12 @@ import com.dripps.voxyserver.server.WorldImportCoordinator;
 import com.dripps.voxyserver.util.VoxyUpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +90,7 @@ public class Voxyserver implements ModInitializer {
             VoxyUpdateChecker.Notice notice = VoxyUpdateChecker.getPendingNotice();
             if (notice == null) return;
             ServerPlayer player = handler.getPlayer();
-            if (!player.createCommandSourceStack().permissions().hasPermission(Permissions.COMMANDS_ADMIN)) return;
+            if (!player.createCommandSourceStack().hasPermission(2)) return;
             player.sendSystemMessage(VoxyUpdateChecker.buildNoticeComponent(notice));
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
@@ -160,7 +159,7 @@ public class Voxyserver implements ModInitializer {
         });
 
         // handle dimension changes, clear players lod cache for old dimensions
-        ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register((player, origin, destination) -> {
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
             if (streamingService != null) {
                 streamingService.onDimensionChange(player, destination);
             }

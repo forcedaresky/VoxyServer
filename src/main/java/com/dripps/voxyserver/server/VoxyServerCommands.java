@@ -15,7 +15,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.Permissions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -31,7 +30,7 @@ public final class VoxyServerCommands {
         Supplier<WorldImportCoordinator> coordinatorSupplier = mod::getImportCoordinator;
         dispatcher.register(
                 Commands.literal("voxyserver")
-                        .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_ADMIN))
+                        .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("import")
                                 .then(Commands.literal("existing")
                                         .then(Commands.literal("all")
@@ -43,7 +42,7 @@ public final class VoxyServerCommands {
                                                         .suggests((context, builder) -> {
                                                             java.util.List<String> dimensions = new java.util.ArrayList<>();
                                                             for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
-                                                                dimensions.add(level.dimension().identifier().toString());
+                                                                dimensions.add(level.dimension().location().toString());
                                                             }
                                                             return SharedSuggestionProvider.suggest(dimensions, builder);
                                                         })
@@ -139,7 +138,7 @@ public final class VoxyServerCommands {
 
     private static ServerLevel findLevel(CommandSourceStack source, String dimensionId) {
         for (ServerLevel level : source.getServer().getAllLevels()) {
-            if (level.dimension().identifier().toString().equals(dimensionId)) {
+            if (level.dimension().location().toString().equals(dimensionId)) {
                 return level;
             }
         }

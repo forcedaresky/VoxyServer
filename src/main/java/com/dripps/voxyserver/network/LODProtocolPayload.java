@@ -3,12 +3,12 @@ package com.dripps.voxyserver.network;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public record LODProtocolPayload(int protocol) implements CustomPacketPayload {
 
     public static final Type<LODProtocolPayload> TYPE =
-            new Type<>(Identifier.parse("voxyserver:lod_protocol"));
+            new Type<>(ResourceLocation.parse("voxyserver:lod_protocol"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LODProtocolPayload> CODEC =
             StreamCodec.of(LODProtocolPayload::write, LODProtocolPayload::read);

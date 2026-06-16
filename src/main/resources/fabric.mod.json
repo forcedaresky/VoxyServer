@@ -22,9 +22,6 @@
     ],
     "main": [
       "com.dripps.voxyserver.Voxyserver"
-    ],
-    "modmenu": [
-      "com.dripps.voxyserver.client.VoxyModMenuIntegration"
     ]
   },
   "mixins": [
@@ -37,7 +34,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": ["~26.1"]
+    "minecraft": "${minecraft_version}"
   },
   "suggests": {
     "voxy": "*",

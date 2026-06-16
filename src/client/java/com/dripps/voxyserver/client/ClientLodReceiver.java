@@ -108,7 +108,7 @@ public class ClientLodReceiver {
     private static void tellPlayer(Component message) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.gui.getChat().addClientSystemMessage(message);
+            mc.gui.getChat().addMessage(message);
         }
     }
 

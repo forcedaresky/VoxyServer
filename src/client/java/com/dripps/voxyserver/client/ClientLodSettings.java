@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
@@ -25,7 +25,7 @@ public class ClientLodSettings {
 
     private static int lastManifestCenterSecX;
     private static int lastManifestCenterSecZ;
-    private static Identifier lastManifestDim;
+    private static ResourceLocation lastManifestDim;
     private static boolean manifestSent = false;
 
     private static String activeServerKey;
@@ -69,7 +69,7 @@ public class ClientLodSettings {
         var player = mc.player;
         if (level == null || player == null) return;
 
-        Identifier dim = level.dimension().identifier();
+        ResourceLocation dim = level.dimension().location();
         int playerSecX = (player.getBlockX() >> 4) >> 1;
         int playerSecZ = (player.getBlockZ() >> 4) >> 1;
 
@@ -108,7 +108,7 @@ public class ClientLodSettings {
 
         WorldIdentifier worldId = WorldIdentifier.of(level);
         if (worldId == null) return;
-        Identifier dim = level.dimension().identifier();
+        ResourceLocation dim = level.dimension().location();
 
         try {
             buildAndSendManifest(mc, level, player, worldId, dim);
@@ -120,7 +120,7 @@ public class ClientLodSettings {
 
     private static void buildAndSendManifest(Minecraft mc, ClientLevel level,
                                              net.minecraft.client.player.LocalPlayer player,
-                                             WorldIdentifier worldId, Identifier dim) {
+                                             WorldIdentifier worldId, ResourceLocation dim) {
         if (VoxyCommon.getInstance() == null) {
             sendManifestChunk(dim, new long[0], new long[0], true);
             return;
@@ -171,7 +171,7 @@ public class ClientLodSettings {
         }
     }
 
-    private static void sendManifestChunk(Identifier dimension, long[] keys, long[] hashes, boolean complete) {
+    private static void sendManifestChunk(ResourceLocation dimension, long[] keys, long[] hashes, boolean complete) {
         if (Minecraft.getInstance().getConnection() == null) return;
         ClientPlayNetworking.send(new LODManifestPayload(dimension, keys, hashes, complete));
     }

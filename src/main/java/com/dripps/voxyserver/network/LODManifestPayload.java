@@ -3,25 +3,25 @@ package com.dripps.voxyserver.network;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 // client to server manifest of sections it already stores for a dimension
 // keys and hashes are parallel arrays. complete marks the final chunk
 public record LODManifestPayload(
-        Identifier dimension,
+        ResourceLocation dimension,
         long[] keys,
         long[] hashes,
         boolean complete
 ) implements CustomPacketPayload {
 
     public static final Type<LODManifestPayload> TYPE =
-            new Type<>(Identifier.parse("voxyserver:lod_manifest"));
+            new Type<>(ResourceLocation.parse("voxyserver:lod_manifest"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LODManifestPayload> CODEC =
             StreamCodec.of(LODManifestPayload::write, LODManifestPayload::read);
 
     private static void write(RegistryFriendlyByteBuf buf, LODManifestPayload payload) {
-        buf.writeIdentifier(payload.dimension);
+        buf.writeResourceLocation(payload.dimension);
         buf.writeBoolean(payload.complete);
         int count = payload.keys.length;
         buf.writeVarInt(count);
@@ -32,7 +32,7 @@ public record LODManifestPayload(
     }
 
     private static LODManifestPayload read(RegistryFriendlyByteBuf buf) {
-        Identifier dimension = buf.readIdentifier();
+        ResourceLocation dimension = buf.readResourceLocation();
         boolean complete = buf.readBoolean();
         int count = buf.readVarInt();
         long[] keys = new long[count];
