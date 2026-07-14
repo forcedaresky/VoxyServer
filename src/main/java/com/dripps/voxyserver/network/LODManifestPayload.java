@@ -14,6 +14,8 @@ public record LODManifestPayload(
         boolean complete
 ) implements CustomPacketPayload {
 
+    public static final int MAX_ENTRIES = 4096;
+
     public static final Type<LODManifestPayload> TYPE =
             new Type<>(ResourceLocation.parse("voxyserver:lod_manifest"));
 
@@ -21,6 +23,9 @@ public record LODManifestPayload(
             StreamCodec.of(LODManifestPayload::write, LODManifestPayload::read);
 
     private static void write(RegistryFriendlyByteBuf buf, LODManifestPayload payload) {
+        if (payload.keys.length != payload.hashes.length || payload.keys.length > MAX_ENTRIES) {
+            throw new IllegalArgumentException("invalid LOD manifest payload size");
+        }
         buf.writeResourceLocation(payload.dimension);
         buf.writeBoolean(payload.complete);
         int count = payload.keys.length;
@@ -35,6 +40,9 @@ public record LODManifestPayload(
         ResourceLocation dimension = buf.readResourceLocation();
         boolean complete = buf.readBoolean();
         int count = buf.readVarInt();
+        if (count < 0 || count > MAX_ENTRIES) {
+            throw new IllegalArgumentException("invalid LOD manifest payload size: " + count);
+        }
         long[] keys = new long[count];
         long[] hashes = new long[count];
         for (int i = 0; i < count; i++) {
