@@ -11,6 +11,7 @@ public class VoxyServerNetworking {
         PayloadTypeRegistry.playS2C().register(LODBulkPayload.TYPE, LODBulkPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PreSerializedLodPayload.TYPE, PreSerializedLodPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(LODClearPayload.TYPE, LODClearPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(LODHashSyncSettingsPayload.TYPE, LODHashSyncSettingsPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(LODServerSettingsPayload.TYPE, LODServerSettingsPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(LODProtocolPayload.TYPE, LODProtocolPayload.CODEC);
 
